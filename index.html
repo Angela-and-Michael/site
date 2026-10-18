@@ -102,6 +102,13 @@ body {
   overflow-x: hidden;
 }
 img { display: block; max-width: 100%; }
+/* A wisteria sprig for the mouse pointer; its stem tip is the click point. Links keep the familiar hand. */
+html {
+  cursor: url("images/cursor-wisteria.png") 2 2, auto;
+  cursor: -webkit-image-set(url("images/cursor-wisteria.png") 1x, url("images/cursor-wisteria@2x.png") 2x) 2 2, auto;
+  cursor: image-set(url("images/cursor-wisteria.png") 1x, url("images/cursor-wisteria@2x.png") 2x) 2 2, auto;
+}
+a, button { cursor: pointer; }
 a { color: inherit; }
 a:focus-visible { outline: 2px solid var(--wisteria); outline-offset: 3px; border-radius: 2px; }
 
@@ -438,12 +445,31 @@ h2, h3 { font-family: var(--font-display); font-weight: 300; text-wrap: balance;
 
 footer { background: var(--paper); }
 footer .wrap {
-  padding-block: 28px;
+  padding-block: 28px 36px;
+  display: grid;
+  justify-items: center;
+  gap: 6px;
   text-align: center;
+}
+footer .signoff {
+  margin: 0;
   font-size: var(--step--1);
   letter-spacing: .14em;
   color: var(--ink-soft);
 }
+.celebrate {
+  font-family: var(--font-script);
+  font-size: var(--step-2);
+  line-height: 1.2;
+  color: var(--wisteria);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: .18em;
+  padding-inline: .2em;
+  transition: color .2s, transform .2s;
+}
+.celebrate:hover { color: var(--sage); }
+.celebrate:active { transform: scale(.96); }
 
 /* ---------- Narrow screens ---------- */
 @media (max-width: 820px) {
@@ -593,9 +619,13 @@ footer .wrap {
 </main>
 
 <footer>
-  <div class="wrap">With love, Angela &amp; Michael</div>
+  <div class="wrap">
+    <a class="celebrate" id="celebrate" href="#celebrate" role="button">Celebrate with us!</a>
+    <p class="signoff">With love, Angela &amp; Michael</p>
+  </div>
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.js" defer></script>
 <script>
 (function () {
   // Countdown to the ceremony: 1:00 PM EDT, June 11, 2027 (17:00 UTC).
@@ -629,6 +659,21 @@ footer .wrap {
     '&body=' + enc(details) + '&location=' + enc(where);
   document.getElementById('ocal').href = 'https://outlook.live.com' + outlookEvent;
   document.getElementById('o365cal').href = 'https://outlook.office.com' + outlookEvent;
+
+  // Celebrate! bursts purple and green confetti from the link, with a cannon from each side of the screen.
+  var CONFETTI = ['#9876bc', '#c8b7e4', '#7b65b8', '#e6b2d8', '#74886a', '#9fb18f', '#c9d3b4'];
+  document.getElementById('celebrate').addEventListener('click', function (e) {
+    e.preventDefault();
+    if (!window.confetti) return;
+    var r = e.currentTarget.getBoundingClientRect();
+    var origin = { x: (r.left + r.width / 2) / innerWidth, y: (r.top + r.height / 2) / innerHeight };
+    var base = { colors: CONFETTI, disableForReducedMotion: true, zIndex: 50, scalar: 1.1 };
+    confetti(Object.assign({}, base, { particleCount: 140, spread: 100, startVelocity: 48, origin: origin }));
+    setTimeout(function () {
+      confetti(Object.assign({}, base, { particleCount: 80, angle: 60, spread: 70, startVelocity: 60, origin: { x: 0, y: .9 } }));
+      confetti(Object.assign({}, base, { particleCount: 80, angle: 120, spread: 70, startVelocity: 60, origin: { x: 1, y: .9 } }));
+    }, 220);
+  });
 
   // Apple Calendar opens the .ics file published next to the page; hide the button where that file isn't served.
   var acal = document.getElementById('acal');
