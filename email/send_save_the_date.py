@@ -59,6 +59,50 @@ LANGS = {'en': 'en', 'english': 'en', 'es': 'es', 'spanish': 'es', 'español': '
 EMAIL_RE = re.compile(r'^[^@\s]+@[^@\s]+\.[^@\s]+$')
 
 
+def secure_context():
+    """A verifying TLS context. Python from python.org ships without trusted root certificates, so if none are
+    loaded, use certifi's bundle when it's installed, otherwise the root certificates built into macOS."""
+    ctx = ssl.create_default_context()
+    if ctx.cert_store_stats()['x509_ca']:
+        return ctx
+    try:
+        import certifi
+        ctx.load_verify_locations(cafile=certifi.where())
+        return ctx
+    except ImportError:
+        pass
+    import subprocess
+    pem = subprocess.run(['security', 'find-certificate', '-a', '-p',
+                          '/System/Library/Keychains/SystemRootCertificates.keychain'],
+                         capture_output=True, text=True).stdout
+    if pem:
+        ctx.load_verify_locations(cadata=pem)
+        return ctx
+    sys.exit('Python has no trusted certificates. Run: open "/Applications/Python %d.%d/Install Certificates.command"'
+             % sys.version_info[:2])
+
+
+SIGN_IN_HELP = '''
+iCloud didn't accept the sign-in for %(login)s, so nothing was sent. Check:
+  1. The password is an app-specific password (looks like abcd-efgh-ijkl-mnop), made at
+     appleid.apple.com > Sign-In and Security > App-Specific Passwords. Your Apple Account password won't work.
+  2. %(login)s is your main iCloud Mail address. If it's an alias, sign in with the main one and keep sending
+     from the alias:  --login main@icloud.com --from %(login)s
+     (Find it on iPhone: Settings > [your name] > iCloud > iCloud Mail.)
+  3. If it still fails, make a fresh app-specific password; they can be revoked and replaced any time.
+'''
+
+
+def ask_password():
+    """Reads ICLOUD_APP_PASSWORD or asks for it; spaces from copy-paste are removed and an empty paste re-asks."""
+    password = os.environ.get('ICLOUD_APP_PASSWORD', '')
+    while not password.strip():
+        password = getpass.getpass('iCloud app-specific password (typing is hidden): ')
+        if not password.strip():
+            print('  Nothing was entered; paste the password and press Return.')
+    return re.sub(r'\s+', '', password)
+
+
 def load_templates():
     """Reads the three HTML emails; each one's <title> is its subject line."""
     templates = {}
@@ -141,7 +185,9 @@ def main():
     ap = argparse.ArgumentParser(description='Send the Save the Date email from iCloud Mail.')
     ap.add_argument('--guests', default=os.path.join(HERE, 'guest-list.csv'), help='CSV with First Name, Email Address, Language')
     ap.add_argument('--from', dest='sender', default=os.environ.get('ICLOUD_EMAIL'),
-                    help='your iCloud email address (or set ICLOUD_EMAIL)')
+                    help='the address guests see the email from (or set ICLOUD_EMAIL)')
+    ap.add_argument('--login', default=os.environ.get('ICLOUD_LOGIN'),
+                    help='your main iCloud Mail address, if --from is an alias (default: same as --from)')
     mode = ap.add_mutually_exclusive_group()
     mode.add_argument('--send', action='store_true', help='actually send to the guest list')
     mode.add_argument('--test', metavar='ADDRESS', help='send one email per language to ADDRESS only')
@@ -182,11 +228,15 @@ def main():
             print('Cancelled; nothing was sent.')
             return
 
-    password = os.environ.get('ICLOUD_APP_PASSWORD') or getpass.getpass('iCloud app-specific password: ')
+    login = args.login or args.sender
+    password = ask_password()
     sent = 0
     with smtplib.SMTP(SMTP_HOST, SMTP_PORT, timeout=60) as smtp:
-        smtp.starttls(context=ssl.create_default_context())
-        smtp.login(args.sender, password)
+        smtp.starttls(context=secure_context())
+        try:
+            smtp.login(login, password)
+        except smtplib.SMTPAuthenticationError:
+            sys.exit(SIGN_IN_HELP % {'login': login})
         for i, guest in enumerate(recipients, start=1):
             try:
                 smtp.send_message(build_message(guest, templates, args.sender))
