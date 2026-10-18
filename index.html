@@ -6,6 +6,18 @@
 <title>Angela &amp; Michael</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="description" content="Save the date: Angela Zavaleta Bernuy and Michael Liut, Friday, June 11, 2027, Ontario, Canada.">
+<!-- Link previews (iMessage, WhatsApp, Facebook, Slack, etc.) -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://angelaandmichael.com/">
+<meta property="og:site_name" content="Angela &amp; Michael">
+<meta property="og:title" content="Angela &amp; Michael">
+<meta property="og:description" content="Save the Date · Friday, June 11, 2027 · Ontario, Canada">
+<meta property="og:image" content="https://angelaandmichael.com/images/og-image.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Save the Date: Angela &amp; Michael, Friday, June 11, 2027, Ontario, Canada, under watercolour wisteria">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Raleway:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap">
@@ -152,11 +164,9 @@ h2, h3 { font-family: var(--font-display); font-weight: 300; text-wrap: balance;
 }
 .names span { display: block; }
 .names .amp {
-  font-family: var(--font-display);
-  font-style: italic;
-  font-size: .4em;
+  font-size: .5em;
   color: var(--wisteria);
-  line-height: 1.2;
+  line-height: 1.1;
 }
 .full-names {
   text-wrap: balance;
@@ -422,14 +432,8 @@ h2, h3 { font-family: var(--font-display); font-weight: 300; text-wrap: balance;
 }
 .monogram { display: grid; justify-items: center; gap: 6px; }
 /* Trailing letter-spacing would push each row off centre; pad the start to match. */
-.monogram .date, .monogram .initials { padding-left: .35em; }
-.monogram .initials { letter-spacing: .2em; padding-left: .2em; }
-.monogram .initial {
-  font-family: var(--font-names);
-  font-size: 2em;
-  letter-spacing: 0;
-  line-height: 1.1;
-}
+.monogram .date { padding-left: .35em; } /* balances the trailing letter-spacing */
+.monogram .mono-logo img { width: clamp(130px, 16vw, 180px); height: auto; margin-inline: auto; }
 .closing .sep { width: clamp(200px, 28vw, 300px); pointer-events: none; }
 
 footer { background: var(--paper); }
@@ -503,9 +507,10 @@ footer .wrap {
       <p class="count"><strong id="days">&mdash;</strong><span id="days-label">days until we say I do</span></p>
       <div class="cal">
         <span class="label">Add to calendar</span>
-        <a class="pill" id="gcal" target="_blank" rel="noopener" href="#">Google</a>
-        <a class="pill" id="ocal" target="_blank" rel="noopener" href="#">Outlook</a>
         <a class="pill" id="acal" target="_blank" rel="noopener" href="save-the-date.ics" type="text/calendar">Apple</a>
+        <a class="pill" id="gcal" target="_blank" rel="noopener" href="#">Google</a>
+        <a class="pill" id="ocal" target="_blank" rel="noopener" href="#">Outlook (personal)</a>
+        <a class="pill" id="o365cal" target="_blank" rel="noopener" href="#">Outlook (work)</a>
       </div>
     </div>
   </section>
@@ -578,7 +583,7 @@ footer .wrap {
       </div>
       <p class="script">Formal invitation to follow</p>
       <p class="note">Your invitation, with RSVP, will arrive in the months ahead. It will include all relevant details. We look forward to celebrating with you!</p>
-      <p class="monogram"><span class="initials"><span class="initial">A</span> &amp; <span class="initial">M</span></span><span class="date">06 &middot; 11 &middot; 27</span></p>
+      <p class="monogram"><span class="mono-logo" role="img" aria-label="A and M"><img class="art-light" src="images/am-monogram.webp" alt="" width="520" height="392" loading="lazy"><img class="art-dark" src="images/am-monogram-dark.webp" alt="" width="520" height="392" loading="lazy"></span><span class="date">06 &middot; 11 &middot; 27</span></p>
       <div class="sep" aria-hidden="true">
         <img class="art-light" src="images/wisteria-sprig.webp" alt="" width="640" height="226" loading="lazy">
         <img class="art-dark" src="images/wisteria-sprig-dark.webp" alt="" width="640" height="226" loading="lazy">
@@ -618,9 +623,12 @@ footer .wrap {
   document.getElementById('gcal').href = 'https://calendar.google.com/calendar/render?action=TEMPLATE' +
     '&text=' + enc(title) + '&dates=20270611T170000Z/20270612T050000Z' +
     '&details=' + enc(details) + '&location=' + enc(where) + '&ctz=America/Toronto';
-  document.getElementById('ocal').href = 'https://outlook.live.com/calendar/0/action/compose?rru=addevent' +
+  // Outlook has separate web apps for personal accounts (outlook.live.com) and work or school accounts (outlook.office.com).
+  var outlookEvent = '/calendar/0/action/compose?rru=addevent' +
     '&subject=' + enc(title) + '&startdt=2027-06-11T13:00:00-04:00&enddt=2027-06-12T01:00:00-04:00' +
     '&body=' + enc(details) + '&location=' + enc(where);
+  document.getElementById('ocal').href = 'https://outlook.live.com' + outlookEvent;
+  document.getElementById('o365cal').href = 'https://outlook.office.com' + outlookEvent;
 
   // Apple Calendar opens the .ics file published next to the page; hide the button where that file isn't served.
   var acal = document.getElementById('acal');
