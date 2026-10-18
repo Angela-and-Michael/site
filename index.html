@@ -130,6 +130,36 @@ a:focus-visible { outline: 2px solid var(--wisteria); outline-offset: 3px; borde
 }
 h2, h3 { font-family: var(--font-display); font-weight: 300; text-wrap: balance; margin: 0; }
 
+/* ---------- Language switch ---------- */
+.lang {
+  position: absolute;
+  z-index: 5;
+  top: calc(env(safe-area-inset-top, 0px) + 12px);
+  right: max(16px, env(safe-area-inset-right, 0px));
+  display: flex;
+  gap: 2px;
+  padding: 3px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--paper);
+  background: color-mix(in srgb, var(--paper) 82%, transparent);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+.lang button {
+  font: 500 var(--step--1)/1 var(--font-body);
+  letter-spacing: .14em;
+  padding: 7px 9px 7px 11px; /* extra left padding balances the trailing letter-spacing */
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink-soft);
+  transition: background-color .2s, color .2s;
+}
+.lang button:hover { color: var(--wisteria); }
+.lang button[aria-pressed="true"] { background: var(--wisteria); color: var(--paper); }
+.lang button:focus-visible { outline: 2px solid var(--wisteria); outline-offset: 2px; }
+
 /* ---------- Arbor ---------- */
 .arbor {
   max-width: 1920px;
@@ -493,6 +523,11 @@ footer .signoff {
 </head>
 <body>
 
+<nav class="lang" aria-label="Language" data-i18n-aria="langAria">
+  <button type="button" data-lang="en" lang="en" aria-label="English" aria-pressed="true">EN</button>
+  <button type="button" data-lang="es" lang="es" aria-label="Español" aria-pressed="false">ES</button>
+  <button type="button" data-lang="it" lang="it" aria-label="Italiano" aria-pressed="false">IT</button>
+</nav>
 <header class="arbor" aria-hidden="true">
   <img class="art-light" src="images/wisteria-canopy.webp" alt="" width="2172" height="724" loading="lazy">
   <img class="art-dark" src="images/wisteria-canopy-dark.webp" alt="" width="2172" height="724" loading="lazy">
@@ -502,23 +537,23 @@ footer .signoff {
   <section class="hero">
     <div class="wrap hero-grid">
       <div class="hero-copy">
-        <p class="save rise d1">Save the Date</p>
-        <h1 class="names rise d2" aria-label="Angela and Michael">
+        <p class="save rise d1" data-i18n="save">Save the Date</p>
+        <h1 class="names rise d2" aria-label="Angela and Michael" data-i18n-aria="namesAria">
           <span>Angela</span>
           <span class="amp" aria-hidden="true">&amp;</span>
           <span class="second">Michael</span>
         </h1>
         <p class="full-names rise d3">Angela Zavaleta Bernuy &amp; Michael Liut</p>
-        <div class="date-block rise d3" role="group" aria-label="Friday, June 11, 2027">
-          <span class="side">Friday</span>
+        <div class="date-block rise d3" role="group" aria-label="Friday, June 11, 2027" data-i18n-aria="dateAria">
+          <span class="side" data-i18n="dow">Friday</span>
           <span class="day">11</span>
-          <span class="side">June<br>2027</span>
+          <span class="side" data-i18n="monthYear">June<br>2027</span>
         </div>
-        <p class="place rise d4">Ontario, Canada</p>
+        <p class="place rise d4" data-i18n="place">Ontario, Canada</p>
       </div>
       <div class="hero-photo rise d2">
         <div class="arch">
-          <img src="images/photo-52.jpg" alt="Michael leading Angela by the hand down a flight of city stairs among autumn trees" width="1000" height="1500" fetchpriority="high">
+          <img src="images/photo-52.jpg" alt="Michael leading Angela by the hand down a flight of city stairs among autumn trees" data-i18n-alt="alt52" width="1000" height="1500" fetchpriority="high">
         </div>
         <div class="photo-divider" aria-hidden="true">
           <img class="art-light" src="images/wisteria-divider.webp" alt="" width="1100" height="301" loading="lazy">
@@ -528,21 +563,21 @@ footer .signoff {
     </div>
   </section>
 
-  <section class="band" aria-label="Countdown and calendar">
+  <section class="band" aria-label="Countdown and calendar" data-i18n-aria="bandAria">
     <div class="wrap">
       <p class="count"><strong id="days">&mdash;</strong><span id="days-label">days until we say I do</span></p>
       <div class="cal">
-        <span class="label">Add to calendar</span>
+        <span class="label" data-i18n="addCal">Add to calendar</span>
         <a class="pill" id="acal" target="_blank" rel="noopener" href="save-the-date.ics" type="text/calendar">Apple</a>
         <a class="pill" id="gcal" target="_blank" rel="noopener" href="#">Google</a>
-        <a class="pill" id="ocal" target="_blank" rel="noopener" href="#">Outlook (personal)</a>
-        <a class="pill" id="o365cal" target="_blank" rel="noopener" href="#">Outlook (work)</a>
+        <a class="pill" id="ocal" target="_blank" rel="noopener" href="#" data-i18n="ocal">Outlook (personal)</a>
+        <a class="pill" id="o365cal" target="_blank" rel="noopener" href="#" data-i18n="o365cal">Outlook (work)</a>
       </div>
     </div>
   </section>
 
   <figure class="wide">
-    <img src="images/photo-84.jpg" alt="Michael twirling Angela on the rocks at the edge of the lake" width="2000" height="1333" loading="lazy">
+    <img src="images/photo-84.jpg" alt="Michael twirling Angela on the rocks at the edge of the lake" data-i18n-alt="alt84" width="2000" height="1333" loading="lazy">
   </figure>
 
   <section class="day-section" id="the-day">
@@ -552,37 +587,37 @@ footer .signoff {
     </div>
     <div class="wrap">
       <div class="section-head">
-        <p class="eyebrow">The day</p>
-        <h2>Friday, <em>June 11</em>, 2027</h2>
+        <p class="eyebrow" data-i18n="theDay">The day</p>
+        <h2 data-i18n="dateHeading">Friday, <em>June 11</em>, 2027</h2>
       </div>
 
       <ol class="timeline">
         <li class="event">
-          <div class="time"><b>1:00</b><small>PM</small></div>
+          <div class="time" data-i18n="time1"><b>1:00</b><small>PM</small></div>
           <div class="body">
-            <h3>Ceremony</h3>
+            <h3 data-i18n="ceremony">Ceremony</h3>
             <p class="venue">St. Mary Immaculate Roman Catholic Church</p>
             <address>10295 Yonge St, Richmond Hill, ON L4C 3B9</address>
             <div class="links">
-              <a class="text-link" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&amp;query=St.+Mary+Immaculate+Roman+Catholic+Church%2C+10295+Yonge+St%2C+Richmond+Hill%2C+ON+L4C+3B9">Get directions</a>
+              <a class="text-link" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&amp;query=St.+Mary+Immaculate+Roman+Catholic+Church%2C+10295+Yonge+St%2C+Richmond+Hill%2C+ON+L4C+3B9" data-i18n="directions">Get directions</a>
             </div>
             <div class="stream">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <rect x="2.5" y="5" width="13" height="14" rx="2.5"/>
                 <path d="M15.5 10.2 21.5 7v10l-6-3.2"/>
               </svg>
-              <p><strong>The ceremony will be live streamed</strong> for those who can't be with us in person. Details will be shared with the formal invitation.</p>
+              <p data-i18n="stream"><strong>The ceremony will be live streamed</strong> for those who can't be with us in person. Details will be shared with the formal invitation.</p>
             </div>
           </div>
         </li>
         <li class="event">
-          <div class="time"><b>5:00</b><small>PM</small></div>
+          <div class="time" data-i18n="time2"><b>5:00</b><small>PM</small></div>
           <div class="body">
-            <h3>Reception</h3>
+            <h3 data-i18n="reception">Reception</h3>
             <p class="venue">The Terrace Event Venue</p>
             <address>1680 Creditstone Rd, Concord, ON L4K 5T4</address>
             <div class="links">
-              <a class="text-link" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&amp;query=The+Terrace+Event+Venue%2C+1680+Creditstone+Rd%2C+Concord%2C+ON+L4K+5T4">Get directions</a>
+              <a class="text-link" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&amp;query=The+Terrace+Event+Venue%2C+1680+Creditstone+Rd%2C+Concord%2C+ON+L4K+5T4" data-i18n="directions">Get directions</a>
             </div>
           </div>
         </li>
@@ -590,13 +625,13 @@ footer .signoff {
     </div>
   </section>
 
-  <section class="gallery-section" aria-label="Photos of Angela and Michael">
+  <section class="gallery-section" aria-label="Photos of Angela and Michael" data-i18n-aria="galleryAria">
     <div class="wrap">
       <div class="gallery">
-        <figure><img src="images/photo-144.jpg" alt="Angela and Michael smiling together on a sandy beach by the lake" width="1000" height="1500" loading="lazy"></figure>
-        <figure><img src="images/photo-100.jpg" alt="Angela and Michael walking hand in hand down a city street lined with trees" width="1000" height="1500" loading="lazy"></figure>
-        <figure><img src="images/photo-47.jpg" alt="Angela and Michael laughing as they walk past a stone building" width="1000" height="1500" loading="lazy"></figure>
-        <figure><img src="images/photo-63.jpg" alt="Angela and Michael walking down wide stone steps hand in hand" width="1000" height="1500" loading="lazy"></figure>
+        <figure><img src="images/photo-144.jpg" alt="Angela and Michael smiling together on a sandy beach by the lake" data-i18n-alt="alt144" width="1000" height="1500" loading="lazy"></figure>
+        <figure><img src="images/photo-100.jpg" alt="Angela and Michael walking hand in hand down a city street lined with trees" data-i18n-alt="alt100" width="1000" height="1500" loading="lazy"></figure>
+        <figure><img src="images/photo-47.jpg" alt="Angela and Michael laughing as they walk past a stone building" data-i18n-alt="alt47" width="1000" height="1500" loading="lazy"></figure>
+        <figure><img src="images/photo-63.jpg" alt="Angela and Michael walking down wide stone steps hand in hand" data-i18n-alt="alt63" width="1000" height="1500" loading="lazy"></figure>
       </div>
     </div>
   </section>
@@ -607,9 +642,9 @@ footer .signoff {
         <img class="art-light" src="images/wisteria-sprig.webp" alt="" width="640" height="226" loading="lazy">
         <img class="art-dark" src="images/wisteria-sprig-dark.webp" alt="" width="640" height="226" loading="lazy">
       </div>
-      <p class="script">Formal invitation to follow</p>
-      <p class="note">Your invitation, with RSVP, will arrive in the months ahead. It will include all relevant details. We look forward to celebrating with you!</p>
-      <p class="monogram"><span class="mono-logo" role="img" aria-label="A and M"><img class="art-light" src="images/am-monogram.webp" alt="" width="520" height="392" loading="lazy"><img class="art-dark" src="images/am-monogram-dark.webp" alt="" width="520" height="392" loading="lazy"></span><span class="date">06 &middot; 11 &middot; 27</span></p>
+      <p class="script" data-i18n="formal">Formal invitation to follow</p>
+      <p class="note" data-i18n="note">Your invitation, with RSVP, will arrive in the months ahead. It will include all relevant details. We look forward to celebrating with you!</p>
+      <p class="monogram"><span class="mono-logo" role="img" aria-label="A and M" data-i18n-aria="monoAria"><img class="art-light" src="images/am-monogram.webp" alt="" width="520" height="392" loading="lazy"><img class="art-dark" src="images/am-monogram-dark.webp" alt="" width="520" height="392" loading="lazy"></span><span class="date">06 &middot; 11 &middot; 27</span></p>
       <div class="sep" aria-hidden="true">
         <img class="art-light" src="images/wisteria-sprig.webp" alt="" width="640" height="226" loading="lazy">
         <img class="art-dark" src="images/wisteria-sprig-dark.webp" alt="" width="640" height="226" loading="lazy">
@@ -620,45 +655,160 @@ footer .signoff {
 
 <footer>
   <div class="wrap">
-    <a class="celebrate" id="celebrate" href="#celebrate" role="button">Celebrate with us!</a>
-    <p class="signoff">With love, Angela &amp; Michael</p>
+    <a class="celebrate" id="celebrate" href="#celebrate" role="button" data-i18n="celebrate">Celebrate with us!</a>
+    <p class="signoff" data-i18n="signoff">With love, Angela &amp; Michael</p>
   </div>
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.js" defer></script>
 <script>
 (function () {
+  // ---------- Languages ----------
+  // English is written in the page itself and read from it; Spanish and Italian live here.
+  // A guest's choice is remembered on their device. ?lang=es or #it in the link opens that language directly.
+  var T = {
+    es: {
+      langAria: 'Idioma',
+      save: 'Reserva la fecha',
+      namesAria: 'Angela y Michael',
+      dateAria: 'Viernes, 11 de junio de 2027',
+      dow: 'Viernes',
+      monthYear: 'Junio<br>2027',
+      place: 'Ontario, Canadá',
+      alt52: 'Michael lleva a Angela de la mano por unas escaleras de la ciudad entre árboles otoñales',
+      bandAria: 'Cuenta regresiva y calendario',
+      addCal: 'Añadir al calendario',
+      ocal: 'Outlook (personal)',
+      o365cal: 'Outlook (trabajo)',
+      alt84: 'Michael hace girar a Angela sobre las rocas a la orilla del lago',
+      theDay: 'El día',
+      dateHeading: 'Viernes, <em>11 de junio</em> de 2027',
+      time1: '<b>13:00</b><small>h</small>',
+      time2: '<b>17:00</b><small>h</small>',
+      ceremony: 'Ceremonia',
+      reception: 'Recepción',
+      directions: 'Cómo llegar',
+      stream: '<strong>La ceremonia se transmitirá en vivo</strong> para quienes no puedan acompañarnos en persona. Los detalles se compartirán con la invitación formal.',
+      galleryAria: 'Fotos de Angela y Michael',
+      alt144: 'Angela y Michael sonriendo juntos en una playa de arena junto al lago',
+      alt100: 'Angela y Michael caminando de la mano por una calle arbolada de la ciudad',
+      alt47: 'Angela y Michael riendo mientras pasan junto a un edificio de piedra',
+      alt63: 'Angela y Michael bajando de la mano por una amplia escalinata de piedra',
+      formal: 'La invitación formal llegará pronto',
+      note: 'Su invitación, con confirmación de asistencia, llegará en los próximos meses. Incluirá todos los detalles. ¡Esperamos celebrar con ustedes!',
+      monoAria: 'A y M',
+      celebrate: '¡Celebren con nosotros!',
+      signoff: 'Con cariño, Angela y Michael'
+    },
+    it: {
+      langAria: 'Lingua',
+      save: 'Segnate la data',
+      namesAria: 'Angela e Michael',
+      dateAria: 'Venerdì 11 giugno 2027',
+      dow: 'Venerdì',
+      monthYear: 'Giugno<br>2027',
+      place: 'Ontario, Canada',
+      alt52: 'Michael accompagna Angela per mano lungo una scalinata in città, tra alberi autunnali',
+      bandAria: 'Conto alla rovescia e calendario',
+      addCal: 'Aggiungi al calendario',
+      ocal: 'Outlook (personale)',
+      o365cal: 'Outlook (lavoro)',
+      alt84: 'Michael fa volteggiare Angela sugli scogli in riva al lago',
+      theDay: 'Il giorno',
+      dateHeading: 'Venerdì <em>11 giugno</em> 2027',
+      time1: '<b>13:00</b><small></small>',
+      time2: '<b>17:00</b><small></small>',
+      ceremony: 'Cerimonia',
+      reception: 'Ricevimento',
+      directions: 'Indicazioni stradali',
+      stream: '<strong>La cerimonia sarà trasmessa in diretta streaming</strong> per chi non potrà essere con noi di persona. I dettagli saranno condivisi con l’invito ufficiale.',
+      galleryAria: 'Foto di Angela e Michael',
+      alt144: 'Angela e Michael sorridenti su una spiaggia sabbiosa in riva al lago',
+      alt100: 'Angela e Michael camminano mano nella mano lungo una strada alberata',
+      alt47: 'Angela e Michael ridono passando accanto a un edificio in pietra',
+      alt63: 'Angela e Michael scendono mano nella mano un’ampia scalinata in pietra',
+      formal: 'Seguirà l’invito ufficiale',
+      note: 'Il vostro invito, con RSVP, arriverà nei prossimi mesi. Conterrà tutti i dettagli. Non vediamo l’ora di festeggiare con voi!',
+      monoAria: 'A e M',
+      celebrate: 'Festeggiate con noi!',
+      signoff: 'Con affetto, Angela e Michael'
+    }
+  };
+  // Words built in script: the countdown and the calendar event.
+  var W = {
+    en: { locale: 'en-CA', many: 'days until we say I do', one: 'day until we say I do', today: ['Today', 'is the day!'],
+          married: ['Married', 'on June 11, 2027'], calTitle: "Angela & Michael's Wedding",
+          calDetails: 'Ceremony at 1:00 PM, St. Mary Immaculate Roman Catholic Church, 10295 Yonge St, Richmond Hill, ON L4C 3B9.\n' +
+            'Reception at 5:00 PM, The Terrace Event Venue, 1680 Creditstone Rd, Concord, ON L4K 5T4.\n' +
+            'The ceremony will be live streamed. Formal invitation with RSVP to follow.' },
+    es: { locale: 'es', many: 'días para nuestro «sí, acepto»', one: 'día para nuestro «sí, acepto»', today: ['¡Hoy', 'es el gran día!'],
+          married: ['Casados', 'el 11 de junio de 2027'], calTitle: 'Boda de Angela y Michael',
+          calDetails: 'Ceremonia a las 13:00, St. Mary Immaculate Roman Catholic Church, 10295 Yonge St, Richmond Hill, ON L4C 3B9.\n' +
+            'Recepción a las 17:00, The Terrace Event Venue, 1680 Creditstone Rd, Concord, ON L4K 5T4.\n' +
+            'La ceremonia se transmitirá en vivo. La invitación formal, con confirmación de asistencia, llegará pronto.' },
+    it: { locale: 'it', many: 'giorni al nostro «sì»', one: 'giorno al nostro «sì»', today: ['Oggi', 'è il grande giorno!'],
+          married: ['Sposati', 'l’11 giugno 2027'], calTitle: 'Matrimonio di Angela e Michael',
+          calDetails: 'Cerimonia alle 13:00, St. Mary Immaculate Roman Catholic Church, 10295 Yonge St, Richmond Hill, ON L4C 3B9.\n' +
+            'Ricevimento alle 17:00, The Terrace Event Venue, 1680 Creditstone Rd, Concord, ON L4K 5T4.\n' +
+            'La cerimonia sarà trasmessa in diretta streaming. Seguirà l’invito ufficiale con RSVP.' }
+  };
+  // Capture the English from the page so switching back restores it exactly.
+  T.en = {};
+  document.querySelectorAll('[data-i18n]').forEach(function (el) { T.en[el.dataset.i18n] = el.innerHTML; });
+  document.querySelectorAll('[data-i18n-alt]').forEach(function (el) { T.en[el.dataset.i18nAlt] = el.alt; });
+  document.querySelectorAll('[data-i18n-aria]').forEach(function (el) { T.en[el.dataset.i18nAria] = el.getAttribute('aria-label'); });
+
+  var lang = 'en';
+
   // Countdown to the ceremony: 1:00 PM EDT, June 11, 2027 (17:00 UTC).
   var target = Date.UTC(2027, 5, 11, 17, 0, 0);
   var daysEl = document.getElementById('days');
   var labelEl = document.getElementById('days-label');
   function tick() {
-    var diff = target - Date.now();
+    var w = W[lang], diff = target - Date.now();
     var days = Math.ceil(diff / 86400000);
-    if (days > 1) { daysEl.textContent = days.toLocaleString('en-CA'); labelEl.textContent = 'days until we say I do'; }
-    else if (days === 1) { daysEl.textContent = '1'; labelEl.textContent = 'day until we say I do'; }
-    else if (diff > -86400000) { daysEl.textContent = 'Today'; labelEl.textContent = 'is the day!'; }
-    else { daysEl.textContent = 'Married'; labelEl.textContent = 'on June 11, 2027'; }
+    if (days > 1) { daysEl.textContent = days.toLocaleString(w.locale); labelEl.textContent = w.many; }
+    else if (days === 1) { daysEl.textContent = '1'; labelEl.textContent = w.one; }
+    else if (diff > -86400000) { daysEl.textContent = w.today[0]; labelEl.textContent = w.today[1]; }
+    else { daysEl.textContent = w.married[0]; labelEl.textContent = w.married[1]; }
   }
-  tick();
   setInterval(tick, 60000);
 
-  // Calendar links
-  var title = "Angela & Michael's Wedding";
-  var details = 'Ceremony at 1:00 PM, St. Mary Immaculate Roman Catholic Church, 10295 Yonge St, Richmond Hill, ON L4C 3B9.\n' +
-    'Reception at 5:00 PM, The Terrace Event Venue, 1680 Creditstone Rd, Concord, ON L4K 5T4.\n' +
-    'The ceremony will be live streamed. Formal invitation with RSVP to follow.';
+  // Calendar links (rebuilt in the chosen language)
   var where = 'St. Mary Immaculate Roman Catholic Church, 10295 Yonge St, Richmond Hill, ON L4C 3B9';
   var enc = encodeURIComponent;
-  document.getElementById('gcal').href = 'https://calendar.google.com/calendar/render?action=TEMPLATE' +
-    '&text=' + enc(title) + '&dates=20270611T170000Z/20270612T050000Z' +
-    '&details=' + enc(details) + '&location=' + enc(where) + '&ctz=America/Toronto';
-  // Outlook has separate web apps for personal accounts (outlook.live.com) and work or school accounts (outlook.office.com).
-  var outlookEvent = '/calendar/0/action/compose?rru=addevent' +
-    '&subject=' + enc(title) + '&startdt=2027-06-11T13:00:00-04:00&enddt=2027-06-12T01:00:00-04:00' +
-    '&body=' + enc(details) + '&location=' + enc(where);
-  document.getElementById('ocal').href = 'https://outlook.live.com' + outlookEvent;
-  document.getElementById('o365cal').href = 'https://outlook.office.com' + outlookEvent;
+  function calendarLinks() {
+    var title = W[lang].calTitle, details = W[lang].calDetails;
+    document.getElementById('gcal').href = 'https://calendar.google.com/calendar/render?action=TEMPLATE' +
+      '&text=' + enc(title) + '&dates=20270611T170000Z/20270612T050000Z' +
+      '&details=' + enc(details) + '&location=' + enc(where) + '&ctz=America/Toronto';
+    // Outlook has separate web apps for personal accounts (outlook.live.com) and work or school accounts (outlook.office.com).
+    var outlookEvent = '/calendar/0/action/compose?rru=addevent' +
+      '&subject=' + enc(title) + '&startdt=2027-06-11T13:00:00-04:00&enddt=2027-06-12T01:00:00-04:00' +
+      '&body=' + enc(details) + '&location=' + enc(where);
+    document.getElementById('ocal').href = 'https://outlook.live.com' + outlookEvent;
+    document.getElementById('o365cal').href = 'https://outlook.office.com' + outlookEvent;
+  }
+
+  function setLang(next, remember) {
+    lang = T[next] ? next : 'en';
+    var t = T[lang];
+    document.documentElement.lang = lang;
+    document.querySelectorAll('[data-i18n]').forEach(function (el) { el.innerHTML = t[el.dataset.i18n]; });
+    document.querySelectorAll('[data-i18n-alt]').forEach(function (el) { el.alt = t[el.dataset.i18nAlt]; });
+    document.querySelectorAll('[data-i18n-aria]').forEach(function (el) { el.setAttribute('aria-label', t[el.dataset.i18nAria]); });
+    document.querySelectorAll('.lang button').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.lang === lang)); });
+    tick();
+    calendarLinks();
+    if (remember) { try { localStorage.setItem('lang', lang); } catch (e) {} }
+  }
+  document.querySelectorAll('.lang button').forEach(function (b) {
+    b.addEventListener('click', function () { setLang(b.dataset.lang, true); });
+  });
+  var asked = (new URLSearchParams(location.search).get('lang') || location.hash.slice(1) || '').toLowerCase();
+  var saved = null;
+  try { saved = localStorage.getItem('lang'); } catch (e) {}
+  setLang(T[asked] ? asked : (saved || 'en'), !!T[asked]);
 
   // Celebrate! bursts purple and green confetti from the link, with a cannon from each side of the screen.
   var CONFETTI = ['#9876bc', '#c8b7e4', '#7b65b8', '#e6b2d8', '#74886a', '#9fb18f', '#c9d3b4'];
