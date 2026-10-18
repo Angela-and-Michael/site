@@ -18,6 +18,10 @@
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Save the Date: Angela &amp; Michael, Friday, June 11, 2027, Ontario, Canada, under watercolour wisteria">
 <meta name="twitter:card" content="summary_large_image">
+<link rel="alternate" hreflang="en" href="https://angelaandmichael.com/">
+<link rel="alternate" hreflang="es" href="https://angelaandmichael.com/es">
+<link rel="alternate" hreflang="it" href="https://angelaandmichael.com/it">
+<link rel="alternate" hreflang="x-default" href="https://angelaandmichael.com/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Raleway:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap">
@@ -665,7 +669,8 @@ footer .signoff {
 (function () {
   // ---------- Languages ----------
   // English is written in the page itself and read from it; Spanish and Italian live here.
-  // A guest's choice is remembered on their device. ?lang=es or #it in the link opens that language directly.
+  // The link decides the language: angelaandmichael.com is English, /es is Spanish, /it is Italian
+  // (?lang=es and #es also work, e.g. in previews). The toggle updates the address so a copied link keeps the language.
   var T = {
     es: {
       langAria: 'Idioma',
@@ -790,7 +795,7 @@ footer .signoff {
     document.getElementById('o365cal').href = 'https://outlook.office.com' + outlookEvent;
   }
 
-  function setLang(next, remember) {
+  function setLang(next) {
     lang = T[next] ? next : 'en';
     var t = T[lang];
     document.documentElement.lang = lang;
@@ -800,15 +805,21 @@ footer .signoff {
     document.querySelectorAll('.lang button').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.lang === lang)); });
     tick();
     calendarLinks();
-    if (remember) { try { localStorage.setItem('lang', lang); } catch (e) {} }
+  }
+  // On the real site the language is a path (/es, /it); anywhere else (local copy, preview) it's a #hash.
+  var onSite = /(^|\.)angelaandmichael\.com$/.test(location.hostname);
+  function showInAddress(l) {
+    try {
+      if (onSite) history.replaceState(null, '', l === 'en' ? '/' : '/' + l);
+      else history.replaceState(null, '', location.pathname + location.search + (l === 'en' ? '' : '#' + l));
+    } catch (e) {}
   }
   document.querySelectorAll('.lang button').forEach(function (b) {
-    b.addEventListener('click', function () { setLang(b.dataset.lang, true); });
+    b.addEventListener('click', function () { setLang(b.dataset.lang); showInAddress(lang); });
   });
-  var asked = (new URLSearchParams(location.search).get('lang') || location.hash.slice(1) || '').toLowerCase();
-  var saved = null;
-  try { saved = localStorage.getItem('lang'); } catch (e) {}
-  setLang(T[asked] ? asked : (saved || 'en'), !!T[asked]);
+  var fromPath = location.pathname.replace(/\/+$/, '').split('/').pop().toLowerCase();
+  var fromLink = (new URLSearchParams(location.search).get('lang') || location.hash.slice(1) || '').toLowerCase();
+  setLang(T[fromPath] ? fromPath : (T[fromLink] ? fromLink : 'en'));
 
   // Celebrate! bursts purple and green confetti from the link, with a cannon from each side of the screen.
   var CONFETTI = ['#9876bc', '#c8b7e4', '#7b65b8', '#e6b2d8', '#74886a', '#9fb18f', '#c9d3b4'];

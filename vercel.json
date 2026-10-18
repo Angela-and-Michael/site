@@ -1,0 +1,10 @@
+{
+  "trailingSlash": false,
+  "redirects": [
+    { "source": "/en", "destination": "/", "permanent": false }
+  ],
+  "rewrites": [
+    { "source": "/es", "destination": "/index.html" },
+    { "source": "/it", "destination": "/index.html" }
+  ]
+}
